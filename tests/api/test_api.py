@@ -1,17 +1,20 @@
 import unittest
 
 from fastapi.testclient import TestClient
-from challenge import app
+from challenge import application
 
 
 class TestBatchPipeline(unittest.TestCase):
     def setUp(self):
-        self.client = TestClient(app)
+        self.client = TestClient(application)
         
     def test_should_get_predict(self):
         data = {
             "flights": [
                 {
+                    "DIANOM": "Domingo",
+                    "SIGLADES": "Miami",
+                    "fecha_i": "2017-01-01 23:30:00",
                     "OPERA": "Aerolineas Argentinas", 
                     "TIPOVUELO": "N", 
                     "MES": 3
@@ -28,6 +31,9 @@ class TestBatchPipeline(unittest.TestCase):
         data = {       
             "flights": [
                 {
+                    "DIANOM": "Domingo",
+                    "SIGLADES": "Miami",
+                    "fecha_i": "2017-01-01 23:30:00",
                     "OPERA": "Aerolineas Argentinas", 
                     "TIPOVUELO": "N",
                     "MES": 13
@@ -42,6 +48,9 @@ class TestBatchPipeline(unittest.TestCase):
         data = {        
             "flights": [
                 {
+                    "SIGLADES": "Miami",
+                    "DIANOM": "Domingo",
+                    "fecha_i": "2017-01-01 23:30:00",
                     "OPERA": "Aerolineas Argentinas", 
                     "TIPOVUELO": "O", 
                     "MES": 13
@@ -56,6 +65,9 @@ class TestBatchPipeline(unittest.TestCase):
         data = {        
             "flights": [
                 {
+                    "SIGLADES": "Miami",
+                    "DIANOM": "Domingo",
+                    "fecha_i": "2017-01-01 23:30:00",
                     "OPERA": "Argentinas", 
                     "TIPOVUELO": "O", 
                     "MES": 13
