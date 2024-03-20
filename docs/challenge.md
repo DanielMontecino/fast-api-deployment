@@ -1,5 +1,8 @@
 # Solution description
 
+The repository created for this challenge is [fast-api-deployment](https://github.com/DanielMontecino/fast-api-deployment).
+This repository was managed with GitFlow paradigm. The production branch is main and a protection rule was added to this branch to block pushes over it, only accepted PR can merge to the main branch.
+
 ## Part I
 
 In this part the following chages were added to the exploration.ipynb file:
