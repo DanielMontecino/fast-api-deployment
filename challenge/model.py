@@ -1,13 +1,13 @@
 import logging
-from typing import List, Tuple, Union
-
+from typing import List, Tuple, Union, Dict, Any
+from datetime import datetime
 import joblib
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.utils import shuffle
 
-from .constants import THRESHOLD_IN_MINUTES, TOP_10_FEATURES
+from .constants import THRESHOLD_IN_MINUTES, TOP_10_FEATURES, MODEL_PKL, FEATURE_DOMAIN
 from .preprocess_utils import get_min_diff, get_period_day, is_high_season
 
 
@@ -27,7 +27,6 @@ class DelayModel:
 
     def __init__(
         self,
-        save_model_path: str = "logistic_regression_model-rc-0-0-1.pkl",
     ):
         """Contructor for DelayModel.
 
@@ -38,7 +37,7 @@ class DelayModel:
         """
 
         self._model = None  # Model should be saved in this attribute.
-        self._model_path = save_model_path
+        self._model_path = MODEL_PKL
 
     def preprocess(
         self, data: pd.DataFrame, target_column: str = None
@@ -84,6 +83,10 @@ class DelayModel:
             ],
             axis=1,
         )
+        
+        for feature in TOP_10_FEATURES:
+            if feature not in features.columns:
+                features[feature] = 0
 
         if target_column:
             return features[TOP_10_FEATURES], target
@@ -133,4 +136,21 @@ class DelayModel:
             self._model = joblib.load(self._model_path)
 
         predictions = self._model.predict(features)
-        return predictions.tolist()
+        return predictions.astype(int).tolist()
+    
+    def validate_inputs(self, data: List[Dict[str, Any]]) -> bool:
+        for data_i in data:
+            if not set(FEATURE_DOMAIN.keys()).issubset(set(data_i.keys())):
+                return False
+            
+            for feature in FEATURE_DOMAIN.keys():
+                if feature == "Fecha-I":
+                    try:
+                        datetime.strptime(data_i[feature], '%Y-%m-%d %H:%M:%S')
+                    except ValueError:
+                        return False
+                else:
+                    if data_i[feature] not in FEATURE_DOMAIN[feature]:
+                        return False
+        return True
+        
