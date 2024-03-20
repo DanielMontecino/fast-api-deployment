@@ -139,6 +139,19 @@ class DelayModel:
         return predictions.astype(int).tolist()
     
     def validate_inputs(self, data: List[Dict[str, Any]]) -> bool:
+        """
+        Validate inputs.
+
+        Parameters
+        ----------
+        data : List[Dict[str, Any]]
+            Data to validate.
+
+        Returns
+        -------
+        bool
+            True if data is valid, False otherwise.
+        """
         for data_i in data:
             if not set(FEATURE_DOMAIN.keys()).issubset(set(data_i.keys())):
                 return False

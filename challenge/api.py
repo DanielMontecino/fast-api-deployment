@@ -19,15 +19,3 @@ app = FastAPI(
 app.include_router(app_home)
 app.include_router(app_log_reg_predict)
 app.include_router(app_log_reg_check)
-
-"""
-curl -X 'POST' \
-  'http://127.0.0.1:8000/model/predict' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "data": [
-    [0,0,0,0,0,0,0,0,0,0]
-  ]
-}'
-"""

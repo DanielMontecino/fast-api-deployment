@@ -30,6 +30,13 @@ DATE_SAMPLES = {
     description="Get Regression Response from random data",
 )
 async def check_model() -> dict:
+    """Get Logistic Regression Response from random data
+
+    Returns
+    -------
+    dict
+        Data and Prediction
+    """
     logging.info("Check model")
     domain_dict = {**FEATURE_DOMAIN, **DATE_SAMPLES}
     data_samp = [choice(domain_dict[col]) for col in domain_dict.keys()]

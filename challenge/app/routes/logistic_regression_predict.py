@@ -17,7 +17,24 @@ app_log_reg_predict = APIRouter()
     response_model=LogisticRegressionPredictionResponse,
     description="Get Regression Response",
 )
-async def post_predict(log_reg: LogisticRegression, status_code=200) -> dict:
+async def post_predict(log_reg: LogisticRegression) -> dict:
+    """Get Logistic Regression Response
+
+    Parameters
+    ----------
+    log_reg : LogisticRegression
+        Logistic Regression data
+
+    Returns
+    -------
+    dict
+        Prediction
+
+    Raises
+    ------
+    fastapi.HTTPException
+        If the data is not valid
+    """
     data = dict(log_reg)["flights"]
     is_valid = clf.model.validate_inputs(data)
     if not is_valid:
