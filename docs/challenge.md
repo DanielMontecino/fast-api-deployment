@@ -23,3 +23,14 @@ Both XGBoost and Logistic Regression with feature importance and weights balanci
 
 The current model selection is not static and can be changed if improvements are implemented in other models such as XGBoost or if other requirements need to be considered.
 
+## Model transcription
+
+Some of the features about transcribe the model into the DelayModel class are:
+
+1.  Features and threshold in minutes were defined in constants.py file to separate static parameters from the code.
+2.  Processing function were defined in processing_utils.py file to separate them from the model.
+3.  When preprocessing, feature "min_diff" is only computed when target_column is given, meaning that ground truth is available in the data. In production, "min_diff" can not be computed since the time of flight operation is unknown.
+4.  When fitting the model, the fitted model is dumped so it can be loaded in future executions.
+5.  When predicting, if the model was not fitted but it was dumped before, it is loaded.
+
+On the other hand, the data path defined in test_model.py was wrong, so it was changed. The features defined in this file were also modified to match computed ones.
