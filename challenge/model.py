@@ -7,17 +7,38 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.utils import shuffle
 
-from .constants import TOP_10_FEATURES, THRESHOLD_IN_MINUTES
+from .constants import THRESHOLD_IN_MINUTES, TOP_10_FEATURES
 from .preprocess_utils import get_min_diff, get_period_day, is_high_season
 
 
 class DelayModel:
+    """
+    A class representing a delay prediction model.
+
+    Attributes:
+        _model: The trained logistic regression model.
+        _model_path: The path to save the model.
+
+    Methods:
+        preprocess: Prepare raw data for training or prediction.
+        fit: Fit the model with preprocessed data.
+        predict: Predict delays for new flights.
+    """
+
     def __init__(
         self,
         save_model_path: str = "logistic_regression_model-rc-0-0-1.pkl",
     ):
-        self._model = None # Model should be saved in this attribute.
-        self.model_path = save_model_path
+        """Contructor for DelayModel.
+
+        Parameters
+        ----------
+        save_model_path : str, optional
+            Path to save the model, by default "logistic_regression_model-rc-0-0-1.pkl"
+        """
+
+        self._model = None  # Model should be saved in this attribute.
+        self._model_path = save_model_path
 
     def preprocess(
         self, data: pd.DataFrame, target_column: str = None
@@ -89,8 +110,8 @@ class DelayModel:
         )
 
         self._model.fit(features, target)
-        if self.model_path:
-            joblib.dump(self._model, self.model_path)
+        if self._model_path:
+            joblib.dump(self._model, self._model_path)
 
         return
 
@@ -105,11 +126,11 @@ class DelayModel:
             (List[int]): predicted targets.
         """
         assert (
-            self._model is not None or self.model_path is not None
+            self._model is not None or self._model_path is not None
         ), "Model is not fitted."
         if self._model is None:
-            logging.info(f"Loading model from {self.model_path}")
-            self._model = joblib.load(self.model_path)
+            logging.info(f"Loading model from {self._model_path}")
+            self._model = joblib.load(self._model_path)
 
         predictions = self._model.predict(features)
         return predictions.tolist()
