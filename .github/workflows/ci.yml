@@ -3,11 +3,11 @@ name: Continuous integration
 on:
   push:
     branches:
-    - main
-    - feature/*
-
-#permissions:
-#  contents: read
+      - main
+      - feature/*
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test-job:
@@ -16,8 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: virtualenv
+    - name: create env
       run: make venv
+
+    - name: activate env
+      run: source .venv/bin/activate
 
     - name: Install dependencies
       run: make install
