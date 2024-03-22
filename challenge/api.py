@@ -1,14 +1,21 @@
+"""
+This module contains the main FastAPI application for the Flights Delay Classification API.
+
+It imports the necessary modules and sets up the FastAPI application
+with routers for different routes.
+"""
+
 from fastapi import FastAPI
 from loguru import logger as logging
 
-import challenge.app.src.classifier as clf
+import challenge.app.src.classifier as CLF
 from challenge.app.routes.home import app_home
 from challenge.app.routes.logistic_regression_predict import app_log_reg_predict
 from challenge.app.routes.model_check import app_log_reg_check
 from challenge.model import DelayModel
 
 logging.add("logs/app_logs", level="INFO")
-clf.model = DelayModel()
+CLF.model = DelayModel()
 
 app = FastAPI(
     title="Flights Delay Classification API",

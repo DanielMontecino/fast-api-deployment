@@ -7,70 +7,57 @@ from challenge import application
 class TestBatchPipeline(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(application)
-        
+
     def test_should_get_predict(self):
         data = {
             "flights": [
                 {
-                    "DIANOM": "Domingo",
-                    "SIGLADES": "Miami",
-                    "fecha_i": "2017-01-01 23:30:00",
-                    "OPERA": "Aerolineas Argentinas", 
-                    "TIPOVUELO": "N", 
-                    "MES": 3
+                    "OPERA": "Aerolineas Argentinas",
+                    "TIPOVUELO": "N",
+                    "MES": 3,
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0])) # change this line to the model of chosing
+
         response = self.client.post("/predict", json=data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"predict": [0]})
-    
 
     def test_should_failed_unkown_column_1(self):
-        data = {       
+        data = {
             "flights": [
                 {
-                    "DIANOM": "Domingo",
-                    "SIGLADES": "Miami",
-                    "fecha_i": "2017-01-01 23:30:00",
-                    "OPERA": "Aerolineas Argentinas", 
+                    "OPERA": "Aerolineas Argentinas",
                     "TIPOVUELO": "N",
-                    "MES": 13
+                    "MES": 13,
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))# change this line to the model of chosing
+
         response = self.client.post("/predict", json=data)
         self.assertEqual(response.status_code, 400)
 
     def test_should_failed_unkown_column_2(self):
-        data = {        
+        data = {
             "flights": [
                 {
-                    "SIGLADES": "Miami",
-                    "DIANOM": "Domingo",
-                    "fecha_i": "2017-01-01 23:30:00",
-                    "OPERA": "Aerolineas Argentinas", 
-                    "TIPOVUELO": "O", 
-                    "MES": 13
+                    "OPERA": "Aerolineas Argentinas",
+                    "TIPOVUELO": "O",
+                    "MES": 13,
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))# change this line to the model of chosing
+
         response = self.client.post("/predict", json=data)
         self.assertEqual(response.status_code, 400)
-    
+
     def test_should_failed_unkown_column_3(self):
-        data = {        
+        data = {
             "flights": [
                 {
-                    "SIGLADES": "Miami",
-                    "DIANOM": "Domingo",
-                    "fecha_i": "2017-01-01 23:30:00",
-                    "OPERA": "Argentinas", 
-                    "TIPOVUELO": "O", 
-                    "MES": 13
+                    "OPERA": "Argentinas",
+                    "TIPOVUELO": "O",
+                    "MES": 13,
                 }
             ]
         }

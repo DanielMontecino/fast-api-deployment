@@ -1,3 +1,13 @@
+"""
+This module contains constants used in the fast-api-deployment project.
+
+Constants:
+- TOP_10_FEATURES: A list of the top 10 features.
+- THRESHOLD_IN_MINUTES: The threshold value in minutes.
+- MODEL_PKL: The filename of the logistic regression model.
+- FEATURE_DOMAIN: A dictionary containing the feature domains.
+"""
+
 TOP_10_FEATURES = [
     "OPERA_American Airlines",
     "OPERA_Avianca",
@@ -16,29 +26,31 @@ MODEL_PKL = "logistic_regression_model-rc-0-0-1.pkl"
 
 
 FEATURE_DOMAIN = {
-    "OPERA": ['American Airlines', 'Air Canada', 'Air France', 'Aeromexico',
-       'Aerolineas Argentinas', 'Austral', 'Avianca', 'Alitalia',
-       'British Airways', 'Copa Air', 'Delta Air', 'Gol Trans', 'Iberia',
-       'K.L.M.', 'Qantas Airways', 'United Airlines', 'Grupo LATAM',
-       'Sky Airline', 'Latin American Wings', 'Plus Ultra Lineas Aereas',
-       'JetSmart SPA', 'Oceanair Linhas Aereas', 'Lacsa'],
+    "OPERA": [
+        "American Airlines",
+        "Air Canada",
+        "Air France",
+        "Aeromexico",
+        "Aerolineas Argentinas",
+        "Austral",
+        "Avianca",
+        "Alitalia",
+        "British Airways",
+        "Copa Air",
+        "Delta Air",
+        "Gol Trans",
+        "Iberia",
+        "K.L.M.",
+        "Qantas Airways",
+        "United Airlines",
+        "Grupo LATAM",
+        "Sky Airline",
+        "Latin American Wings",
+        "Plus Ultra Lineas Aereas",
+        "JetSmart SPA",
+        "Oceanair Linhas Aereas",
+        "Lacsa",
+    ],
     "TIPOVUELO": ["I", "N"],
-    "SIGLADES": ['Miami', 'Dallas', 'Buenos Aires', 'Toronto', 'Paris',
-       'Ciudad de Mexico', 'Bogota', 'Roma', 'Londres',
-       'Ciudad de Panama', 'Atlanta', 'Sao Paulo', 'Rio de Janeiro',
-       'Florianapolis', 'Madrid', 'Lima', 'Sydney', 'Houston', 'Asuncion',
-       'Cataratas Iguacu', 'Puerto Montt', 'Punta Arenas',
-       'Puerto Natales', 'Balmaceda', 'Temuco', 'Valdivia', 'Concepcion',
-       'La Serena', 'Copiapo', 'Calama', 'Antofagasta', 'Iquique',
-       'Arica', 'Mendoza', 'Cordoba', 'Montevideo', 'Castro (Chiloe)',
-       'Osorno', 'Orlando', 'Nueva York', 'Guayaquil', 'Cancun',
-       'Punta Cana', 'Los Angeles', 'Auckland N.Z.', 'Isla de Pascua',
-       'La Paz', 'Santa Cruz', 'Curitiba, Bra.', 'Quito', 'Bariloche',
-       'Rosario', 'Washington', 'Tucuman', 'Melbourne', 'San Juan, Arg.',
-       'Neuquen', 'Pisco, Peru', 'Ushuia', 'Puerto Stanley',
-       'Punta del Este', 'Cochabamba'],
-    "MES": [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12],
-    "DIANOM": ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Sabado', 'Viernes']   
+    "MES": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 }
-
-

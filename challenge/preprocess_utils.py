@@ -1,3 +1,7 @@
+"""
+This module contains utility functions for preprocessing data.
+"""
+
 from datetime import datetime
 
 import pandas as pd
@@ -27,14 +31,13 @@ def get_period_day(date: str) -> str:
     night_min = datetime.strptime("00:00", "%H:%M").time()
     night_max = datetime.strptime("4:59", "%H:%M").time()
 
-    if date_time > morning_min and date_time < morning_max:
+    if morning_max > date_time > morning_min:
         return "mañana"
-    elif date_time > afternoon_min and date_time < afternoon_max:
+    if afternoon_max > date_time > afternoon_min:
         return "tarde"
-    elif (date_time > evening_min and date_time < evening_max) or (
-        date_time > night_min and date_time < night_max
-    ):
+    if (evening_max > date_time > evening_min) or (night_max > date_time > night_min):
         return "noche"
+    raise ValueError(f"Invalid date {date_time}")
 
 
 def is_high_season(fecha: str) -> int:
@@ -51,26 +54,25 @@ def is_high_season(fecha: str) -> int:
     int
         1 if the date is in high season, 0 otherwise.
     """
-    fecha_año = int(fecha.split("-")[0])
+    fecha_anio = int(fecha.split("-")[0])
     fecha = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
-    range1_min = datetime.strptime("15-Dec", "%d-%b").replace(year=fecha_año)
-    range1_max = datetime.strptime("31-Dec", "%d-%b").replace(year=fecha_año)
-    range2_min = datetime.strptime("1-Jan", "%d-%b").replace(year=fecha_año)
-    range2_max = datetime.strptime("3-Mar", "%d-%b").replace(year=fecha_año)
-    range3_min = datetime.strptime("15-Jul", "%d-%b").replace(year=fecha_año)
-    range3_max = datetime.strptime("31-Jul", "%d-%b").replace(year=fecha_año)
-    range4_min = datetime.strptime("11-Sep", "%d-%b").replace(year=fecha_año)
-    range4_max = datetime.strptime("30-Sep", "%d-%b").replace(year=fecha_año)
+    range1_min = datetime.strptime("15-Dec", "%d-%b").replace(year=fecha_anio)
+    range1_max = datetime.strptime("31-Dec", "%d-%b").replace(year=fecha_anio)
+    range2_min = datetime.strptime("1-Jan", "%d-%b").replace(year=fecha_anio)
+    range2_max = datetime.strptime("3-Mar", "%d-%b").replace(year=fecha_anio)
+    range3_min = datetime.strptime("15-Jul", "%d-%b").replace(year=fecha_anio)
+    range3_max = datetime.strptime("31-Jul", "%d-%b").replace(year=fecha_anio)
+    range4_min = datetime.strptime("11-Sep", "%d-%b").replace(year=fecha_anio)
+    range4_max = datetime.strptime("30-Sep", "%d-%b").replace(year=fecha_anio)
 
     if (
-        (fecha >= range1_min and fecha <= range1_max)
-        or (fecha >= range2_min and fecha <= range2_max)
-        or (fecha >= range3_min and fecha <= range3_max)
-        or (fecha >= range4_min and fecha <= range4_max)
+        (range1_max >= fecha >= range1_min)
+        or (range2_max >= fecha >= range2_min)
+        or (range3_max >= fecha >= range3_min)
+        or (range4_max >= fecha >= range4_min)
     ):
         return 1
-    else:
-        return 0
+    return 0
 
 
 def get_min_diff(data: pd.Series) -> float:
