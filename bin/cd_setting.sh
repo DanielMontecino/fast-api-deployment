@@ -28,6 +28,20 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member="serviceAccount:$SVC@$PROJECT_ID.iam.gserviceaccount.com" \
     --role="roles/iam.serviceAccountTokenCreator"
 
+# grant your service account an IAM role on your project: Cloud Run
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SVC@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/run.admin"
+    
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SVC@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/iam.serviceAccountUser"
+
+# grant your service account an IAM role on your project: Artifact Registry
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:$SVC@$PROJECT_ID.iam.gserviceaccount.com" \
+    --role="roles/artifactregistry.admin"
+
 # Attach IAM Role(Workload Identity User) to service account
 gcloud iam service-accounts add-iam-policy-binding $SVC@$PROJECT_ID.iam.gserviceaccount.com \
 --project=$PROJECT_ID \
