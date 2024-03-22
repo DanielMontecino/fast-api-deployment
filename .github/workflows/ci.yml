@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  test-job:
+  ci-job:
     runs-on: ubuntu-latest
 
     steps:
