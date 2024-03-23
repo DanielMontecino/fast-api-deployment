@@ -22,7 +22,7 @@ TOP_10_FEATURES = [
 ]
 
 THRESHOLD_IN_MINUTES = 15
-MODEL_PKL = "logistic_regression_model-rc-0-0-1.pkl"
+MODEL_PKL = "gs://lg-api/lg-modek/logistic_regression_model-rc-0-0-1.pkl"
 
 
 FEATURE_DOMAIN = {
