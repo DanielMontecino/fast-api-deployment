@@ -1,7 +1,59 @@
 name: 'Continuous Delivery'
 
 on:
-  ...
+  pull_request:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: alien-airfoil-417901
+  GAR_LOCATION: us-central1
+  SERVICE: lg-api-service
+  REGION: us-central1
+  REPOSITORY: lg-api-registry
+  IMAGE: lg-api
 
 jobs:
-  ...
+  deploy:
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v1'
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}'
+
+      - name: Docker Auth
+        id: docker-auth
+        uses: 'docker/login-action@v1'
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ steps.auth.outputs.access_token }}'
+          registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
+
+      - name: Build and Push Container
+        run: |-
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}" ./
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}"
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ github.sha }}
+
+      # If required, use the Cloud Run url output in later steps
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}

@@ -7,7 +7,7 @@ This repository was managed with GitFlow paradigm. The production branch is main
 
 In this part the following chages were added to the exploration.ipynb file:
 
-1. Solve a bug in sns.barplot function, which needs to type parameters x and y.
+1. Solve two bugs. The first in sns.barplot function, which needs to type parameters x and y. The second in the get_period_day function which returns None when date is on the defined limits.
 2. Plotting was condensed in function plot_flights_by_feature to avoid code duplication
 3. Some features were computed but not used (high_season, and period_day), while other were filtered to form the training data, but they neither were used (SIGLADES and DIANOM). These features were added to the feature dataframe.
 4. The training and evaluation were also condensed in one function (train_and_eval_model) to avoid duplicated code.
