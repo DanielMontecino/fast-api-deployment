@@ -24,6 +24,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: create env
+        run: make venv
+
+      - name: activate env
+        run: source .venv/bin/activate
+
+      - name: Install dependencies
+        run: make install
+
+      - name: Run model test
+        run: make model-test
 
       - name: Google Auth
         id: auth
