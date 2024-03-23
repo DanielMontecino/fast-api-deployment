@@ -13,9 +13,11 @@ from challenge.app.routes.home import app_home
 from challenge.app.routes.logistic_regression_predict import app_log_reg_predict
 from challenge.app.routes.model_check import app_log_reg_check
 from challenge.model import DelayModel
+from challenge.constants import RELEASE_MODEL_PKL
 
 logging.add("logs/app_logs", level="INFO")
 CLF.model = DelayModel()
+CLF.model.load(RELEASE_MODEL_PKL)
 
 app = FastAPI(
     title="Flights Delay Classification API",

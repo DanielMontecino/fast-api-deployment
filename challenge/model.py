@@ -22,15 +22,16 @@ Methods:
 
 import logging
 from typing import Any, Dict, List, Tuple, Union
-
+import os
+from gcloud import storage
 import joblib
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.utils import shuffle
 
-from .constants import FEATURE_DOMAIN, MODEL_PKL, THRESHOLD_IN_MINUTES, TOP_10_FEATURES
-from .preprocess_utils import get_min_diff
+from challenge.constants import FEATURE_DOMAIN, MODEL_PKL, THRESHOLD_IN_MINUTES, TOP_10_FEATURES, PROJECT_ID
+from challenge.preprocess_utils import get_min_diff
 
 
 class DelayModel:
@@ -131,7 +132,57 @@ class DelayModel:
 
         self._model.fit(features, target)
         if self._model_path:
-            joblib.dump(self._model, self._model_path)
+            self.save(self._model_path)
+            
+    def save(self, dst: str) -> None:
+        """
+        Save model to a file. If dst starts with "gs://", the model is saved to a GCS bucket.
+
+        Args:
+            dst (str): path to save the model.
+        """
+        assert self._model is not None, "Model is not fitted."
+        if dst[0:5] == "gs://":
+            dst_path = dst
+            dst = dst[5::]
+            bucket = dst.split("/")[0]
+            file = dst[len(bucket) + 1::]
+
+            client = storage.Client(project=PROJECT_ID)
+            bucket = client.get_bucket(bucket)
+            blob = bucket.blob(file)
+            
+            os.makedirs("tmp", exist_ok=True)
+            dst = os.path.join("tmp", os.path.basename(file))
+            
+            joblib.dump(self._model, dst)
+            blob.upload_from_filename(dst_path)
+        else:
+            joblib.dump(self._model, dst)  
+            
+    def load(self, src: str) -> None:
+        """
+        Load model from a file. If src starts with "gs://", the model is loaded from a GCS bucket.
+
+        Args:
+            src (str): path to load the model.
+        """
+        if src[0:5] == "gs://":
+            src = src[5::]
+            bucket = src.split("/")[0]
+            file = src[len(bucket) + 1::]
+
+            client = storage.Client(project=PROJECT_ID)
+            bucket = client.get_bucket(bucket)
+            blob = bucket.blob(file)
+            
+            os.makedirs("tmp", exist_ok=True)
+            dst = os.path.join("tmp", os.path.basename(file))
+            
+            blob.download_to_filename(dst)
+            self._model = joblib.load(dst)
+        else:
+            self._model = joblib.load(src)    
 
     def predict(self, features: pd.DataFrame) -> List[int]:
         """
@@ -148,7 +199,7 @@ class DelayModel:
         ), "Model is not fitted."
         if self._model is None:
             logging.info("Loading model from %s", self._model_path)
-            self._model = joblib.load(self._model_path)
+            self.load(self._model_path)
 
         predictions = self._model.predict(features)
         return predictions.astype(int).tolist()

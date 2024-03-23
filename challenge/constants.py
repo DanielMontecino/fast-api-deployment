@@ -2,12 +2,14 @@
 This module contains constants used in the fast-api-deployment project.
 
 Constants:
+- PROJECT_ID: The GCP project ID.
 - TOP_10_FEATURES: A list of the top 10 features.
 - THRESHOLD_IN_MINUTES: The threshold value in minutes.
 - MODEL_PKL: The filename of the logistic regression model.
+- DATA_PATH: The path to the data file.
 - FEATURE_DOMAIN: A dictionary containing the feature domains.
 """
-
+PROJECT_ID = "alien-airfoil-417901"
 TOP_10_FEATURES = [
     "OPERA_American Airlines",
     "OPERA_Avianca",
@@ -22,8 +24,9 @@ TOP_10_FEATURES = [
 ]
 
 THRESHOLD_IN_MINUTES = 15
-MODEL_PKL = "gs://lg-api/lg-modek/logistic_regression_model-rc-0-0-1.pkl"
-
+MODEL_PKL = "logistic_regression_model-rc-0-0-1.pkl"
+RELEASE_MODEL_PKL = f"gs://lg-api/lg-modek/{MODEL_PKL}"
+DATA_PATH = "gs://lg-api/lg-data/data.csv"
 
 FEATURE_DOMAIN = {
     "OPERA": [
